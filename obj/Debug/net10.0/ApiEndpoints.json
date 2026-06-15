@@ -1,0 +1,12 @@
+[
+  {
+    "ContainingType": "MobileExpenses_API.Controllers.MobileExpensesDataController",
+    "Method": "GetCategories",
+    "RelativePath": "api/MobileExpensesData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]
