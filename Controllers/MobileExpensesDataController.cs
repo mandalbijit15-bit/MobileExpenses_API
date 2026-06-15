@@ -19,14 +19,15 @@ namespace MobileExpenses_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
+            
             var categories = await _mobileExpensesDbContext.Categories
-                .Include(x=>x.SubCategories)
+                .Include(x=>x.Subcategories)
                 .Select(x => new
                 {
-                    x.CategoryName,
-                    SubCategories = x.SubCategories.Select(s => new
+                    x.Categoryname,
+                    SubCategories = x.Subcategories.Select(s => new
                     {
-                        s.SubCategoryName,
+                        s.Subcategoryname,
                     }).ToList()
                 }).ToListAsync();
 

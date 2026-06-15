@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MobileExpenses_API.Models;
 
 public partial class Category
 {
-    public int CategoryId { get; set; }
+    public int Categoryid { get; set; }
 
-    public string CategoryName { get; set; } = null!;
+    public string? Categoryname { get; set; }
 
-    public bool IsActive { get; set; }
+    public BitArray Isactive { get; set; } = null!;
 
-    public virtual ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
+    public virtual ICollection<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
 }

@@ -17,33 +17,47 @@ public partial class MobileExpensesDbContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
-    public virtual DbSet<SubCategory> SubCategories { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=MobileExpensesDb;Trusted_Connection=True;TrustServerCertificate=True;");
+    public virtual DbSet<Subcategory> Subcategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B85FEDA50");
+            entity.HasKey(e => e.Categoryid).HasName("pk_category");
 
-            entity.Property(e => e.CategoryName).HasMaxLength(100);
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.ToTable("categories");
+
+            entity.Property(e => e.Categoryid)
+                .ValueGeneratedNever()
+                .HasColumnName("categoryid");
+            entity.Property(e => e.Categoryname)
+                .HasMaxLength(100)
+                .HasColumnName("categoryname");
+            entity.Property(e => e.Isactive)
+                .HasColumnType("bit(1)")
+                .HasColumnName("isactive");
         });
 
-        modelBuilder.Entity<SubCategory>(entity =>
+        modelBuilder.Entity<Subcategory>(entity =>
         {
-            entity.HasKey(e => e.SubCategoryId).HasName("PK__SubCateg__26BE5B196F9E3666");
+            entity.HasKey(e => e.Subcategoryid).HasName("pk_subcategory");
 
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.SubCategoryName).HasMaxLength(100);
+            entity.ToTable("subcategories");
 
-            entity.HasOne(d => d.Category).WithMany(p => p.SubCategories)
-                .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SubCategories_Categories");
+            entity.Property(e => e.Subcategoryid)
+                .ValueGeneratedNever()
+                .HasColumnName("subcategoryid");
+            entity.Property(e => e.Categoryid).HasColumnName("categoryid");
+            entity.Property(e => e.Isactive)
+                .HasColumnType("bit(1)")
+                .HasColumnName("isactive");
+            entity.Property(e => e.Subcategoryname)
+                .HasMaxLength(100)
+                .HasColumnName("subcategoryname");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Subcategories)
+                .HasForeignKey(d => d.Categoryid)
+                .HasConstraintName("fk_subcategory_category");
         });
 
         OnModelCreatingPartial(modelBuilder);
