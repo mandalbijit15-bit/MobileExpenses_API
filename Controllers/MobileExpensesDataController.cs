@@ -24,9 +24,11 @@ namespace MobileExpenses_API.Controllers
                 .Include(x=>x.Subcategories)
                 .Select(x => new
                 {
+                    x.Categoryid,
                     x.Categoryname,
                     SubCategories = x.Subcategories.Select(s => new
                     {
+                        s.Subcategoryid,
                         s.Subcategoryname,
                     }).ToList()
                 }).ToListAsync();
