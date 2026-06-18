@@ -5,8 +5,6 @@ using MobileExpenses_API.Models;
 
 namespace MobileExpenses_API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class MobileExpensesDataController : ControllerBase
     {
         public readonly MobileExpensesDbContext _mobileExpensesDbContext;

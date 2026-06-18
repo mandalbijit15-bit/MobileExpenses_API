@@ -40,6 +40,8 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "api/{controller}/{action}/{id?}");
 
 app.Run();
