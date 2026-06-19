@@ -19,6 +19,8 @@ public partial class MobileExpensesDbContext : DbContext
 
     public virtual DbSet<Subcategory> Subcategories { get; set; }
 
+    public virtual DbSet<Transaction> Transactions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
@@ -58,6 +60,35 @@ public partial class MobileExpensesDbContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.Subcategories)
                 .HasForeignKey(d => d.Categoryid)
                 .HasConstraintName("fk_subcategory_category");
+        });
+
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasKey(e => e.Transactionid).HasName("transactions_pkey");
+
+            entity.ToTable("transactions");
+
+            entity.Property(e => e.Transactionid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("transactionid");
+            entity.Property(e => e.Categoryid).HasColumnName("categoryid");
+            entity.Property(e => e.Expenseamount)
+                .HasPrecision(18, 2)
+                .HasColumnName("expenseamount");
+            entity.Property(e => e.Itemname)
+                .HasMaxLength(255)
+                .HasColumnName("itemname");
+            entity.Property(e => e.Subcategoryid).HasColumnName("subcategoryid");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.Categoryid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_expenses_categories");
+
+            entity.HasOne(d => d.Subcategory).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.Subcategoryid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_expenses_subcategories");
         });
 
         OnModelCreatingPartial(modelBuilder);

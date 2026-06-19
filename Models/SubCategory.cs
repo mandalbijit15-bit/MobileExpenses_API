@@ -15,4 +15,6 @@ public partial class Subcategory
     public BitArray Isactive { get; set; } = null!;
 
     public virtual Category Category { get; set; } = null!;
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
