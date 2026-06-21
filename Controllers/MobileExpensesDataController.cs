@@ -76,7 +76,7 @@ namespace MobileExpenses_API.Controllers
             return Ok(transaction);
         }
 
-        [HttpPost("DeleteTransaction")]
+        [HttpDelete("DeleteTransaction/{id}")]
         public async Task<IActionResult> DeleteTransaction(int Id)
         { 
          var transaction = await _mobileExpensesDbContext.Transactions.FindAsync(Id);
