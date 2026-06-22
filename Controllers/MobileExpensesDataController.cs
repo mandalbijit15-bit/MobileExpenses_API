@@ -62,15 +62,35 @@ namespace MobileExpenses_API.Controllers
         [HttpPost("AddTransaction")]
         public async Task<IActionResult> AddTransaction(TransactionRequestDTO transaction)
         {
-            _mobileExpensesDbContext.Transactions.Add(new Transaction
+            var transactionEntity = new Transaction
             {
                 Categoryid = transaction.CategoryId,
                 Subcategoryid = transaction.SubCategoryId,
                 Itemname = transaction.ItemName,
                 Expenseamount = transaction.Expenseamount,
-            });
+            };
+
+            _mobileExpensesDbContext.Transactions.Add(transactionEntity);
+
             await _mobileExpensesDbContext.SaveChangesAsync();
-            return Ok(transaction);
+
+            // transactionEntity.Transactionid is now populated
+
+            var savedTransaction = await _mobileExpensesDbContext.Transactions
+                .Where(x => x.Transactionid == transactionEntity.Transactionid)
+                .Select(x => new TransactionRequestDTO
+                {
+                    Transactionid = x.Transactionid,
+                    CategoryId = x.Categoryid,
+                    CategoryName = x.Category.Categoryname,
+                    SubCategoryId = x.Subcategory.Subcategoryid,
+                    SubCategoryName = x.Subcategory.Subcategoryname,
+                    Expenseamount = x.Expenseamount,
+                    ItemName = x.Itemname
+                })
+                .FirstOrDefaultAsync();
+
+            return Ok(savedTransaction);
         }
 
         [HttpDelete("DeleteTransaction/{id}")]
@@ -83,7 +103,8 @@ namespace MobileExpenses_API.Controllers
             }
             _mobileExpensesDbContext.Transactions.Remove(transaction);
             await _mobileExpensesDbContext.SaveChangesAsync();
-            return Ok();
+
+            return Ok(Id);
         }
 
         [HttpPost("UpdateTransaction/{TransactionId}")]
