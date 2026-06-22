@@ -106,5 +106,13 @@ namespace MobileExpenses_API.Controllers
             await _mobileExpensesDbContext.SaveChangesAsync();
             return Ok(existingTransaction);
         }
+        [HttpDelete("ClearAllTransactions")]
+        public async Task<IActionResult> clearAllTransactions()
+        {
+            var transactions = await _mobileExpensesDbContext.Transactions.ToListAsync();
+            _mobileExpensesDbContext.Transactions.RemoveRange(transactions);
+            await _mobileExpensesDbContext.SaveChangesAsync();
+            return Ok();
+        }
     }
 }
