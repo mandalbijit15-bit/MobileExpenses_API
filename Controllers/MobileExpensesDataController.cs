@@ -99,7 +99,7 @@ namespace MobileExpenses_API.Controllers
             existingTransaction.Itemname = transaction.ItemName;
             existingTransaction.Expenseamount = transaction.Expenseamount;
             await _mobileExpensesDbContext.SaveChangesAsync();
-            return Ok(existingTransaction);
+            return Ok(transaction);
         }
         [HttpDelete("ClearAllTransactions")]
         public async Task<IActionResult> clearAllTransactions()
