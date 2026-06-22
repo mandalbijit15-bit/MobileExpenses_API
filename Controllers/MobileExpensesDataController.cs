@@ -58,7 +58,7 @@ namespace MobileExpenses_API.Controllers
                         x.Subcategory.Subcategoryid,
                         x.Subcategory.Subcategoryname
                     },
-                    x.Itemname,
+                    itemName = x.Itemname,
                     x.Expenseamount
                 }).ToListAsync();
             return Ok(transactions);
