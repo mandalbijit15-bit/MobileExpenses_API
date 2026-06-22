@@ -78,15 +78,31 @@ namespace MobileExpenses_API.Controllers
 
         [HttpDelete("DeleteTransaction/{id}")]
         public async Task<IActionResult> DeleteTransaction(int Id)
-        { 
-         var transaction = await _mobileExpensesDbContext.Transactions.FindAsync(Id);
+        {
+            var transaction = await _mobileExpensesDbContext.Transactions.FindAsync(Id);
             if (transaction == null)
             {
                 return NotFound();
             }
-         _mobileExpensesDbContext.Transactions.Remove(transaction);
-         await _mobileExpensesDbContext.SaveChangesAsync();
-         return Ok();
-}
+            _mobileExpensesDbContext.Transactions.Remove(transaction);
+            await _mobileExpensesDbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost("UpdateTransaction/{TransactionId}")]
+        public async Task<IActionResult> UpdateTransaction(int TransactionId, TransactionRequestDTO transaction)
+        {
+            var existingTransaction = await _mobileExpensesDbContext.Transactions.FindAsync(TransactionId);
+            if (existingTransaction == null)
+            {
+                return NotFound();
+            }
+            existingTransaction.Categoryid = transaction.CategoryId;
+            existingTransaction.Subcategoryid = transaction.SubCategoryId;
+            existingTransaction.Itemname = transaction.ItemName;
+            existingTransaction.Expenseamount = transaction.Expenseamount;
+            await _mobileExpensesDbContext.SaveChangesAsync();
+            return Ok(existingTransaction);
+        }
     }
 }
