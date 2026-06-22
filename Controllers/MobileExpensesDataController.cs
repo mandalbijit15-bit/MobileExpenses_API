@@ -45,21 +45,16 @@ namespace MobileExpenses_API.Controllers
             var transactions = await _mobileExpensesDbContext.Transactions
                 .Include(x => x.Category)
                 .Include(x => x.Subcategory)
-                .Select(x => new
+                .Select(x => new TransactionRequestDTO
                 {
-                    x.Transactionid,
-                    Category = new
-                    {
-                        x.Category.Categoryid,
-                        x.Category.Categoryname
-                    },
-                    SubCategory = new
-                    {
-                        x.Subcategory.Subcategoryid,
-                        x.Subcategory.Subcategoryname
-                    },
-                    itemName = x.Itemname,
-                    x.Expenseamount
+                    Transactionid = x.Transactionid,
+                    CategoryId = x.Categoryid,
+                    CategoryName = x.Category.Categoryname,
+                    SubCategoryId = x.Subcategory.Subcategoryid,
+                    SubCategoryName = x.Subcategory.Subcategoryname,
+                    Expenseamount = x.Expenseamount,
+                    ItemName = x.Itemname,
+
                 }).ToListAsync();
             return Ok(transactions);
 
