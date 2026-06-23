@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using MobileExpenses_API.Interfaces;
 using MobileExpenses_API.Models;
+using MobileExpenses_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

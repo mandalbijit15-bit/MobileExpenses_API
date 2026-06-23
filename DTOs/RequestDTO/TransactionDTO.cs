@@ -1,6 +1,6 @@
 ﻿namespace MobileExpenses_API.DTOs.RequestDTO
 {
-    public class TransactionRequestDTO
+    public class TransactionDTO
     {
         public int? Transactionid { get; set; }
         public int CategoryId { get; set; }
