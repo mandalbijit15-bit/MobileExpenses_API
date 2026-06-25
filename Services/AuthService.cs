@@ -108,7 +108,6 @@ namespace MobileExpenses_API.Services
                 Username = registerDTO.Username,
                 Email = registerDTO.Email,
                 Passwordhash = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password),
-                Createddate = DateTime.UtcNow,
             };
 
             _context.Users.Add(user);
