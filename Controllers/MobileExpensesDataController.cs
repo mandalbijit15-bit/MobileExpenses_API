@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MobileExpenses_API.DTOs.RequestDTO;
@@ -8,6 +9,7 @@ using MobileExpenses_API.Models;
 
 namespace MobileExpenses_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MobileExpensesDataController : ControllerBase

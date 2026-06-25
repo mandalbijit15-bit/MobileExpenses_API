@@ -15,7 +15,11 @@ public partial class Transaction
 
     public decimal Expenseamount { get; set; }
 
+    public int? Userid { get; set; }
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual Subcategory Subcategory { get; set; } = null!;
+
+    public virtual User? User { get; set; }
 }
