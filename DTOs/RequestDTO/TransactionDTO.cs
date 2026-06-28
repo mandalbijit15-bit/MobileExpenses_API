@@ -9,5 +9,6 @@
         public string? SubCategoryName { get; set; }
         public string ItemName { get; set; } = null!;
         public decimal Expenseamount { get; set; }
+        public int? Userid { get; set; }
     }
 }

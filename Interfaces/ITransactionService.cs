@@ -4,7 +4,7 @@ namespace MobileExpenses_API.Interfaces
 {
     public interface ITransactionService
     {
-        Task<List<TransactionDTO>> GetTransactions();
+        Task<List<TransactionDTO>> GetTransactions(int UserId);
         Task<TransactionDTO?> AddTransaction(TransactionDTO transaction);
 
         Task<int?> DeleteTransaction(int transactionId);

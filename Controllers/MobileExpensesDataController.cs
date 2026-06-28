@@ -9,7 +9,7 @@ using MobileExpenses_API.Models;
 
 namespace MobileExpenses_API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MobileExpensesDataController : ControllerBase
@@ -34,10 +34,10 @@ namespace MobileExpenses_API.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("GetTransactions")]
-        public async Task<IActionResult> GetTransactions()
+        [HttpGet("GetTransactionsByUserId")]
+        public async Task<IActionResult> GetTransactions(int UserId)
         {
-            var transactions = await _transactionService.GetTransactions();
+            var transactions = await _transactionService.GetTransactions(UserId);
             return Ok(transactions);
 
         }

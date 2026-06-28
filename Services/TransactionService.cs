@@ -14,11 +14,12 @@ namespace MobileExpenses_API.Services
                 _mobileExpensesDbContext = mobileExpensesDbContext;
             }
 
-            public async Task<List<TransactionDTO>> GetTransactions()
+            public async Task<List<TransactionDTO>> GetTransactions(int UserId)
             {
                 return await _mobileExpensesDbContext.Transactions
                 .Include(x => x.Category)
                 .Include(x => x.Subcategory)
+                .Where(x=>x.Userid == UserId)
                 .Select(x => new TransactionDTO
                 {
                     Transactionid = x.Transactionid,
@@ -28,6 +29,7 @@ namespace MobileExpenses_API.Services
                     SubCategoryName = x.Subcategory.Subcategoryname,
                     Expenseamount = x.Expenseamount,
                     ItemName = x.Itemname,
+                    Userid = UserId,
 
                 }).ToListAsync();
             }
@@ -88,6 +90,7 @@ namespace MobileExpenses_API.Services
                     Subcategoryid = transaction.SubCategoryId,
                     Itemname = transaction.ItemName,
                     Expenseamount = transaction.Expenseamount,
+                    Userid = transaction.Userid,
                 };
 
                 _mobileExpensesDbContext.Transactions.Add(transactionEntity);
@@ -106,7 +109,8 @@ namespace MobileExpenses_API.Services
                         SubCategoryId = x.Subcategory.Subcategoryid,
                         SubCategoryName = x.Subcategory.Subcategoryname,
                         Expenseamount = x.Expenseamount,
-                        ItemName = x.Itemname
+                        ItemName = x.Itemname,
+                        Userid = x.Userid
                     })
                     .FirstOrDefaultAsync();
             }
