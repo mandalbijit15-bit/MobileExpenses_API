@@ -42,7 +42,7 @@ namespace MobileExpenses_API.Controllers
                 return NotFound();
             }
 
-            return Ok();
+            return Ok(updateBalanceDto.MonthlyBalance);
         }
     }
 }
