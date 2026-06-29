@@ -18,7 +18,7 @@ namespace MobileExpenses_API.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("GetDashboardDetails{userId}")]
+        [HttpGet("GetDashboardDetails/{userId}")]
         public async Task<IActionResult> GetDashboard(int userId)
         {
             var result = await _dashboardService.GetDashboardDetails(userId);
