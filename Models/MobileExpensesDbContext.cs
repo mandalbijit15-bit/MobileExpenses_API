@@ -23,7 +23,7 @@ public partial class MobileExpensesDbContext : DbContext
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
-    public virtual DbSet<User> Users { get; set; } 
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -137,6 +137,9 @@ public partial class MobileExpensesDbContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
+            entity.Property(e => e.Monthlybalance)
+                .HasPrecision(18, 2)
+                .HasColumnName("monthlybalance");
             entity.Property(e => e.Passwordhash).HasColumnName("passwordhash");
             entity.Property(e => e.Username)
                 .HasMaxLength(100)

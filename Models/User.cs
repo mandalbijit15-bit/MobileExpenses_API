@@ -15,6 +15,8 @@ public partial class User
 
     public DateTime Createddate { get; set; }
 
+    public decimal Monthlybalance { get; set; }
+
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
