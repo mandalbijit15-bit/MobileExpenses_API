@@ -9,5 +9,7 @@
         public decimal RemainingBalance { get; set; }
 
         public decimal TotalExpenses { get; set; }
+
+        public int totalTransactions { get; set; }
     }
 }

@@ -27,12 +27,16 @@ namespace MobileExpenses_API.Services
                 .Where(x => x.Userid == userId)
                 .SumAsync(x => x.Expenseamount);
 
+            var totalTransactions = await _mobileExpensesDbContext.Transactions
+               .CountAsync(t => t.Userid == userId);
+
             return new DashboardDTO
             {
                 UserId = userId,
                 MonthlyBalance = user.Monthlybalance,
                 TotalExpenses = totalExpenses,
-                RemainingBalance = user.Monthlybalance - totalExpenses
+                RemainingBalance = user.Monthlybalance - totalExpenses,
+                totalTransactions = totalTransactions
             };
         }
 
