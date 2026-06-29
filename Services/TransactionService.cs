@@ -72,9 +72,10 @@ namespace MobileExpenses_API.Services
                 return transaction;
             }
 
-            public async Task ClearAllTransactions()
+            public async Task clearAllTransactionsByUserid(int userid)
             {
                 var transactions = await _mobileExpensesDbContext.Transactions
+                .Where(t=>t.Userid == userid)
                     .ToListAsync();
 
                 _mobileExpensesDbContext.Transactions.RemoveRange(transactions);

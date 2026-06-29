@@ -11,6 +11,6 @@ namespace MobileExpenses_API.Interfaces
 
         Task<TransactionDTO?> UpdateTransaction(int transactionId, TransactionDTO transaction);
 
-        Task ClearAllTransactions();
+        Task clearAllTransactionsByUserid(int UserId);
     }
 }
