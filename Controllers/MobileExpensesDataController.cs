@@ -63,7 +63,7 @@ namespace MobileExpenses_API.Controllers
             await _transactionService.UpdateTransaction(TransactionId, transaction);
             return Ok(transaction);
         }
-        [HttpDelete("ClearAllTransactionsByUserid")]
+        [HttpDelete("ClearAllTransactionsByUserid/{UserId}")]
         public async Task<IActionResult> clearAllTransactionsByUserid(int UserId)
         {
             await _transactionService.clearAllTransactionsByUserid(UserId);
