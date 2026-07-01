@@ -53,9 +53,14 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .AllowAnyOrigin()
+                 .WithOrigins(
+                "http://localhost:5173",
+                "https://mobileexpenseapp.vercel.app"
+                 )
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials(); // to receive refresh token in the response header
+
         });
 });
 

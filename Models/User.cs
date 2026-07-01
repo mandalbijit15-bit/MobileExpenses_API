@@ -17,6 +17,8 @@ public partial class User
 
     public decimal Monthlybalance { get; set; }
 
+    public virtual ICollection<Refreshtoken> Refreshtokens { get; set; } = new List<Refreshtoken>();
+
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();

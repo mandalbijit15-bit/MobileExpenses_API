@@ -17,6 +17,8 @@ public partial class MobileExpensesDbContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Refreshtoken> Refreshtokens { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Subcategory> Subcategories { get; set; }
@@ -42,6 +44,30 @@ public partial class MobileExpensesDbContext : DbContext
             entity.Property(e => e.Isactive)
                 .HasColumnType("bit(1)")
                 .HasColumnName("isactive");
+        });
+
+        modelBuilder.Entity<Refreshtoken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("refreshtokens_pkey");
+
+            entity.ToTable("refreshtokens");
+
+            entity.HasIndex(e => e.Token, "refreshtokens_token_key").IsUnique();
+
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Expiresat).HasColumnName("expiresat");
+            entity.Property(e => e.Isrevoked).HasColumnName("isrevoked");
+            entity.Property(e => e.Token).HasColumnName("token");
+            entity.Property(e => e.Userid).HasColumnName("userid");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Refreshtokens)
+                .HasForeignKey(d => d.Userid)
+                .HasConstraintName("fk_refreshtokens_users");
         });
 
         modelBuilder.Entity<Role>(entity =>

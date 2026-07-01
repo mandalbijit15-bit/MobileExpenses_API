@@ -8,6 +8,9 @@ using MobileExpenses_API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MobileExpenses_API.Services
 {
@@ -15,13 +18,23 @@ namespace MobileExpenses_API.Services
     {
         readonly MobileExpensesDbContext _context;
         readonly IConfiguration _configuration;
-        readonly IPasswordHasher<User> _passwordHasher;
         public AuthService(MobileExpensesDbContext context, IConfiguration configuration, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
             _configuration = configuration;
-            _passwordHasher = passwordHasher;
         }
+
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[64];
+
+            using var rng = RandomNumberGenerator.Create();
+
+            rng.GetBytes(randomBytes);
+
+            return Convert.ToBase64String(randomBytes);
+        }
+
         public string GnerateJWTTokenAsync(User user, List<string> roles)
         {
                var claims = new List<Claim>
@@ -54,12 +67,12 @@ namespace MobileExpenses_API.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<AuthResponseDto> LoginAsync(LoginDTO loginDTO)
+        public async Task<LoginResultDTO> LoginAsync(LoginDTO loginDTO)
         {
-             var user = await _context.Users
-             .Include(u => u.Roles)
-             .FirstOrDefaultAsync(u =>
-              u.Username == loginDTO.Username);
+            var user = await _context.Users
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u =>
+             u.Username == loginDTO.Username);
 
             if (user == null)
             {
@@ -81,20 +94,65 @@ namespace MobileExpenses_API.Services
 
             var token = GnerateJWTTokenAsync(user, roles);
 
-            return new AuthResponseDto
-            {
-                UserId = user.Userid,
-                Username = user.Username,
-                Token = token,
-                Roles = user.Roles.Select(x => x.Rolename).ToList(),
+            var refreshToken = GenerateRefreshToken();
 
+            var refreshTokenEntity = new Refreshtoken
+            {
+                Userid = user.Userid,
+                Token = refreshToken,
+                Expiresat = DateTime.UtcNow.AddMinutes(5),
             };
+
+            _context.Refreshtokens.Add(refreshTokenEntity);
+
+            await _context.SaveChangesAsync();
+
+
+            return new LoginResultDTO
+            {
+                RefreshToken = refreshToken,
+                AuthResponse = new AuthResponseDto
+                {
+                    UserId = user.Userid,
+                    Username = user.Username,
+                    Token = token,
+                    Roles = user.Roles.Select(x => x.Rolename).ToList(),
+                }
+            };
+         }
+
+        public async Task<string> Logout(string refreshToken)
+        {
+                var token = await _context.Refreshtokens
+                        .Include(x => x.User)
+                        .FirstOrDefaultAsync(x => x.Token == refreshToken);          
+
+            // grab all the refresh tokens for the user and revoke them
+
+            if (token != null)
+            {
+                _context.Refreshtokens.Where(x => x.Userid == token.Userid).ToList().ForEach(t => t.Isrevoked = true);
+                await _context.SaveChangesAsync();
+                
+                return  "All Refresh Tokens for" + token.User.Username + "are revoked ";
+            }
+
+            return "Refresh Token not found for user";
         }
 
-        public async Task<AuthResponseDto> RegisterAsync( RegisterDTO registerDTO)
+        public async Task<Refreshtoken> Refresh(string refreshToken)
+        {
+            var storedToken = await _context.Refreshtokens
+                 .Include(x => x.User)
+                 .FirstOrDefaultAsync(x => x.Token == refreshToken);
+
+            return storedToken ?? throw new Exception("refresh token not found.");
+        }
+
+        public async Task<LoginResultDTO> RegisterAsync( RegisterDTO registerDTO)
         {
             var existingUser = await _context.Users
-        .FirstOrDefaultAsync(u =>
+                   .FirstOrDefaultAsync(u =>
             u.Username == registerDTO.Username ||
             u.Email == registerDTO.Email);
 
@@ -131,14 +189,31 @@ namespace MobileExpenses_API.Services
 
             var token = GnerateJWTTokenAsync(user, roles);
 
-            return new AuthResponseDto
+            var refreshToken = GenerateRefreshToken();
+
+            var refreshTokenEntity = new Refreshtoken
             {
-                UserId = user.Userid,
-                Username = user.Username,
-                Token = token,
-                Roles = user.Roles.Select(x=>x.Rolename).ToList(),
-                
+                Userid = user.Userid,
+                Token = refreshToken,
+                Expiresat = DateTime.UtcNow.AddMinutes(5),
             };
+
+            _context.Refreshtokens.Add(refreshTokenEntity);
+
+            await _context.SaveChangesAsync();
+
+            return new LoginResultDTO
+            {
+                RefreshToken = refreshToken,
+                AuthResponse = new AuthResponseDto
+                {
+                    UserId = user.Userid,
+                    Username = user.Username,
+                    Token = token,
+                    Roles = user.Roles.Select(x => x.Rolename).ToList(),
+                }
+            };
+
         }
     }
 }
