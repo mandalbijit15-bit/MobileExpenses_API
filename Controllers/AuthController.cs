@@ -13,9 +13,11 @@ namespace MobileExpenses_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        readonly IConfiguration _configuration;
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -64,7 +66,8 @@ namespace MobileExpenses_API.Controllers
                    HttpOnly = true,
                    Secure = true,          // true in production (HTTPS)
                    SameSite = SameSiteMode.None, // if frontend and API are on different domains
-                   Expires = DateTimeOffset.UtcNow.AddMinutes(10)
+                   Expires = DateTime.UtcNow.AddMinutes(
+                    Convert.ToDouble(_configuration["Refresh:ExpiryMinutes"]))
                });
 
                 return Ok(Loginresult.AuthResponse);

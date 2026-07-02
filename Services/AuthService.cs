@@ -100,7 +100,8 @@ namespace MobileExpenses_API.Services
             {
                 Userid = user.Userid,
                 Token = refreshToken,
-                Expiresat = DateTime.UtcNow.AddMinutes(5),
+                Expiresat = DateTime.UtcNow.AddMinutes(
+                    Convert.ToDouble(_configuration["Refresh:ExpiryMinutes"])),
             };
 
             _context.Refreshtokens.Add(refreshTokenEntity);
@@ -195,7 +196,8 @@ namespace MobileExpenses_API.Services
             {
                 Userid = user.Userid,
                 Token = refreshToken,
-                Expiresat = DateTime.UtcNow.AddMinutes(5),
+                Expiresat = DateTime.UtcNow.AddMinutes(
+                    Convert.ToDouble(_configuration["Refresh:ExpiryMinutes"])),
             };
 
             _context.Refreshtokens.Add(refreshTokenEntity);
